@@ -1,27 +1,28 @@
-from parrot import Parrot
-parrot = Parrot()
+from parrot.parrot import Parrot
 import torch
 import warnings
 warnings.filterwarnings("ignore")
 
+''' 
+uncomment to get reproducable paraphrase generations
 def random_state(seed):
   torch.manual_seed(seed)
   if torch.cuda.is_available():
     torch.cuda.manual_seed_all(seed)
 
 random_state(1234)
+'''
 
-parrot = Parrot(model_tag="prithivida/parrot_paraphraser_on_T5")
+#Init models (make sure you init ONLY once if you integrate this to your code)
+b = Parrot(model_tag="prithivida/parrot_paraphraser_on_T5")
 
-phrases = [
-     ('Many of you may be familiar with Python as a programming language,'
-     ' but don\'t know much about it')
-]
+a = "Can you recommend some upscale restaurants in Newyork?"
+phrases = [a]
+
 for phrase in phrases:
-  print('-'*110)
-  print('Input Phrase:', phrase)
-  print('-'*110)
-  paraphrases = parrot.augment(input_phrase=phrase)
-  if paraphrases:
-    for paraphrase in paraphrases:
-      print(paraphrase)
+  print("-"*100)
+  print("Input_phrase: ", phrase)
+  print("-"*100)
+  para_phrases = b.augment(input_phrase=phrase, use_gpu=False)
+  for para_phrase in para_phrases:
+   print(para_phrase)
